@@ -1,0 +1,55 @@
+﻿@page
+@using SailClubLibrary.Models
+@model RazorBoatApp2026InClass.Pages.Members.CreateMemberModel
+@{
+	ViewData["Title"] = "Create member";
+}
+
+<h1>Create member</h1>
+
+<form method="post">
+	<div class="form-group">
+		<label asp-for="@Model.Member.FirstName" class="control-label"></label>
+		<input asp-for="@Model.Member.FirstName" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.Member.SurName" class="control-label"></label>
+		<input asp-for="@Model.Member.SurName" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.Member.PhoneNumber" class="control-label"></label>
+		<input asp-for="@Model.Member.PhoneNumber" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.Member.Address" class="control-label"></label>
+		<input asp-for="@Model.Member.Address" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.Member.City" class="control-label"></label>
+		<input asp-for="@Model.Member.City" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.Member.Mail" class="control-label"></label>
+		<input asp-for="@Model.Member.Mail" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.Member.TheMemberType" class="control-label"></label>
+		<select asp-for="@Model.Member.TheMemberType" asp-items="Html.GetEnumSelectList<MemberType>()" class="form-control"></select>
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.Member.TheMemberRole" class="control-label"></label>
+		<select asp-for="@Model.Member.TheMemberRole" asp-items="Html.GetEnumSelectList<MemberRole>()" class="form-control"></select>
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.Member.Id" class="control-label"></label>
+		<input asp-for="@Model.Member.Id" class="form-control" />
+	</div>
+
+	<div class="form-group">
+		<input type="submit" value="Create a Member" class="btn-primary" />
+	</div>
+
+	<div>
+		<a asp-page="index">Back to list of members</a>
+	</div>
+</form>

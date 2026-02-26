@@ -1,0 +1,58 @@
+﻿@page
+@using SailClubLibrary.Models
+@model RazorBoatApp2026InClass.Pages.Boats.CreateBoatModel
+@{
+	ViewData["Title"] = "Create boat";
+}
+
+<h1>Create boat</h1>
+
+<form method="post">
+	<div asp-validation-summary="All" class="text-danger"></div>
+	<div class="form-group">
+		<label asp-for="@Model.NewBoat.Id" class="control-label"></label>
+		<input asp-for="@Model.NewBoat.Id" class="form-control"/>
+		<span asp-validation-for="@Model.NewBoat.Id" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.NewBoat.Model" class="control-label"></label>
+		<input asp-for="@Model.NewBoat.Model" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.NewBoat.SailNumber" class="control-label"></label>
+		<input asp-for="@Model.NewBoat.SailNumber" class="form-control" />
+		<span asp-validation-for="@Model.NewBoat.SailNumber" class="text-danger"></span>
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.NewBoat.TheBoatType" class="control-label"></label>
+		<select asp-for="@Model.NewBoat.TheBoatType" asp-items="Html.GetEnumSelectList<BoatType>()" class="form-control"></select>
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.NewBoat.Draft" class="control-label"></label>
+		<input asp-for="@Model.NewBoat.Draft" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.NewBoat.Width" class="control-label"></label>
+		<input asp-for="@Model.NewBoat.Width" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.NewBoat.Length" class="control-label"></label>
+		<input asp-for="@Model.NewBoat.Length" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.NewBoat.YearOfConstruction" class="control-label"></label>
+		<input asp-for="@Model.NewBoat.YearOfConstruction" class="form-control" />
+	</div>
+	<div class="form-group">
+		<label asp-for="@Model.NewBoat.EngineInfo" class="control-label"></label>
+		<input asp-for="@Model.NewBoat.EngineInfo" class="form-control" />
+	</div>
+
+	<div class="form-group">
+		<input type="submit" value="Create a boat" class="btn-primary" />
+	</div>
+
+	<div>
+		<a asp-page="index">Back to list of boats</a>
+	</div>
+</form>

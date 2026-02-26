@@ -1,0 +1,64 @@
+﻿@page
+@using SailClubLibrary.Models
+@model RazorBoatApp2026InClass.Pages.Boats.IndexModel
+@{
+	ViewData["Title"] = "List boats";
+}
+
+<h1>List of boats</h1>
+
+<p>
+	<a asp-page="CreateBoat">Create a new boat</a>
+</p>
+
+<form method="get">
+	search:<input type="text" asp-for="@Model.FilterCriteria" />
+	<input type="submit" value="Filter" />
+</form>
+
+<table class="table">
+	<form method="Get">
+	<thead>
+		<tr>
+			@* <th>ID</th> *@
+			<th>
+				<button type="submit" class="btn btn-link" name="SortBy" value="Id">Id</button>
+			</th>
+			<th>BoatType</th>
+			<th>Model</th>
+			@* <th>SailNumber</th> *@
+			<th>
+				<button type="submit" class="btn btn-link" name="SortBy" value="SailNumber">SailNumber</button>
+			</th>
+			@* <th>YearOfConstruction</th> *@
+			<th>
+				<button type="submit" class="btn btn-link" name="SortBy" value="YearOfConstruction">YearOfConstruction</button>
+			</th>
+			<th></th>
+			<th></th>
+		</tr>
+	</thead>
+	</form>
+	<tbody>
+		@foreach(Boat item in Model.Boats)
+		{
+			<tr>
+				<td>@item.Id</td>
+				<td>@item.TheBoatType</td>
+				<td>@item.Model</td>
+				<td>@item.SailNumber</td>
+				<td>@item.YearOfConstruction</td>
+				
+				<td class="form-group">
+					<a asp-page="UpdateBoat" asp-route-sailNumber="@item.SailNumber" value="Update boat" class="btn btn-primary">Update</a>
+				</td>
+				<form method="Post">
+					<td class="form-group">
+						<input type="submit" asp-page-handler="Delete" asp-route-sailnumber="@item.SailNumber" value="Delete boat" class="btn btn-danger" />
+					</td>
+				</form>
+				
+			</tr>
+		}
+	</tbody>
+</table>
