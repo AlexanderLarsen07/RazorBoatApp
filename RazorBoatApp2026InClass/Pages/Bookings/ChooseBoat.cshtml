@@ -45,14 +45,14 @@
 		@foreach (Boat item in Model.Boats)
 		{
 			<tr>
-				<td>@item.Id</td>
-				<td>@item.TheBoatType</td>
-				<td>@item.Model</td>
-				<td>@item.SailNumber</td>
-				<td>@item.YearOfConstruction</td>
+				<td>@item.Boat_ID</td>
+				<td>@item.Boat_TheBoatType</td>
+				<td>@item.Boat_Model</td>
+				<td>@item.Boat_Sailnumber</td>
+				<td>@item.Boat_yearofconstruction</td>
 
 				<td class="form-group">
-					<a asp-page="CreateBooking" asp-route-SailNumber="@item.SailNumber" value="Choose boat" class="btn btn-primary">Create Booking</a>
+					<a asp-page="CreateBooking" asp-route-SailNumber="@item.Boat_Sailnumber" value="Choose boat" class="btn btn-primary">Create Booking</a>
 				</td>
 				</tr>
 		}

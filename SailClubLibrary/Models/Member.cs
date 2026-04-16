@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SailClubLibrary.Helpers.Attributes;
 
 namespace SailClubLibrary.Models
 {
@@ -20,10 +21,13 @@ namespace SailClubLibrary.Models
         public string Mail { get; set; }
         public MemberType TheMemberType { get; set; }
         public MemberRole TheMemberRole { get; set; }
+        [IgnoreUpdate]
         public int Id { get; set; }
+
+        public string MemberImage { get; set; }
         #endregion
 
-        #region Constructor
+        #region Constructors
         /// <summary>
         /// Constructor used for creating new member objects
         /// </summary>
@@ -47,6 +51,7 @@ namespace SailClubLibrary.Models
         }
 
         #endregion
+
         #region Methods
         /// <summary>
         /// ToString method used for printing out member information

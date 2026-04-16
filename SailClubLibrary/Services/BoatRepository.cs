@@ -26,8 +26,8 @@ namespace SailClubLibrary.Services
         #region Constructor
         public BoatRepository()
         {
-            //_boats = [];
-            _boats = new MockData().BoatData;
+            _boats = [];
+            //_boats = new MockData().BoatData;
         }
         #endregion
 
@@ -37,13 +37,13 @@ namespace SailClubLibrary.Services
         /// </summary>
         public void AddBoat(Boat boat)
         {
-            if (!_boats.ContainsKey(boat.SailNumber))
+            if (!_boats.ContainsKey(boat.Boat_Sailnumber))
             {
-                _boats[boat.SailNumber] = boat;
-                Console.WriteLine($"Båden med sejlnummeret {boat.SailNumber} er blevet tilføjet til listen");
+                _boats[boat.Boat_Sailnumber] = boat;
+                Console.WriteLine($"Båden med sejlnummeret {boat.Boat_Sailnumber} er blevet tilføjet til listen");
                 return;
             }
-            throw new BoatSailnumberExistsException($"Båden med sejlnummeret {boat.SailNumber} findes allerede.");
+            throw new BoatSailnumberExistsException($"Båden med sejlnummeret {boat.Boat_Sailnumber} findes allerede.");
         }
 
         /// <summary>
@@ -68,17 +68,17 @@ namespace SailClubLibrary.Services
         /// </summary>
         public void UpdateBoat(Boat updatedBoat)
         {
-            if (_boats.ContainsKey(updatedBoat.SailNumber))
+            if (_boats.ContainsKey(updatedBoat.Boat_Sailnumber))
             {
-                Boat existingBoat = _boats[updatedBoat.SailNumber];
+                Boat existingBoat = _boats[updatedBoat.Boat_Sailnumber];
 
-                existingBoat.TheBoatType = updatedBoat.TheBoatType;
-                existingBoat.Model = updatedBoat.Model;
-                existingBoat.EngineInfo = updatedBoat.EngineInfo;
-                existingBoat.Draft = updatedBoat.Draft;
-                existingBoat.Width = updatedBoat.Width;
-                existingBoat.Length = updatedBoat.Length;
-                existingBoat.YearOfConstruction = updatedBoat.YearOfConstruction;
+                existingBoat.Boat_TheBoatType = updatedBoat.Boat_TheBoatType;
+                existingBoat.Boat_Model = updatedBoat.Boat_Model;
+                existingBoat.Boat_EngineInfo = updatedBoat.Boat_EngineInfo;
+                existingBoat.Boat_Draft = updatedBoat.Boat_Draft;
+                existingBoat.Boat_Width = updatedBoat.Boat_Width;
+                existingBoat.Boat_Length = updatedBoat.Boat_Length;
+                existingBoat.Boat_yearofconstruction = updatedBoat.Boat_yearofconstruction;
             }
         }
 
@@ -106,12 +106,17 @@ namespace SailClubLibrary.Services
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Runs through the dictionary and returns a list of filtered boats
+        /// </summary>
+        /// <param name="filterCriteria"></param>
+        /// <returns></returns>
         public List<Boat> FilterBoats(string filterCriteria)
         {
             List<Boat> filteredBoats = new List<Boat>();
             foreach (Boat boat in _boats.Values)
             {
-                if (boat.Model.Contains(filterCriteria, StringComparison.CurrentCultureIgnoreCase))
+                if (boat.Boat_Model.Contains(filterCriteria, StringComparison.CurrentCultureIgnoreCase))
                 {
                     filteredBoats.Add(boat);
                 }

@@ -12,6 +12,7 @@ namespace SailClubLibrary.Interfaces
     /// </summary>
     public interface IBookingRepository
     {
+        #region Methods
         void AddBooking(Booking booking);
         void RemoveBooking(Booking b);
         List<Booking> GetAllBookings();
@@ -19,5 +20,6 @@ namespace SailClubLibrary.Interfaces
         void PrintAll();
         int GetBookingCountForMember(Member member);
         Dictionary<string, int> GetAllBookingsForMembers();
+        #endregion
     }
 }

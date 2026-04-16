@@ -15,7 +15,7 @@ namespace SailClubLibraryUnitTests
 
             boatRepository.AddBoat(boat);
 
-            Assert.AreSame(boatRepository.SearchBoat(boat.SailNumber), boat);
+            Assert.AreSame(boatRepository.SearchBoat(boat.Boat_Sailnumber), boat);
         }
         [TestMethod]
         public void TestBoat_AddBoat_Exception()
@@ -23,7 +23,7 @@ namespace SailClubLibraryUnitTests
             BoatRepository boatRepository = new();
             Boat boat = new Boat(12, BoatType.TERA, "fds", "21", "13", 231, 123, 21, "2132");
 
-            boat.SailNumber = "16-3335";
+            boat.Boat_Sailnumber = "16-3335";
 
             Assert.ThrowsException<BoatSailnumberExistsException>(() => boatRepository.AddBoat(boat));
         }
@@ -34,26 +34,26 @@ namespace SailClubLibraryUnitTests
 
             boatRepository.RemoveBoat("16-3335");
 
-            Assert.IsFalse(boatRepository.GetAllBoats().Any(b => b.SailNumber == "16-3335"));
+            Assert.IsFalse(boatRepository.GetAllBoats().Any(b => b.Boat_Sailnumber == "16-3335"));
         }
         [TestMethod]
         public void TestBoat_UpdateBoat_ValuesTransferred()
         {
             BoatRepository boatRepository = new();
             Boat updatedBoat = new Boat(12, BoatType.TERA, "fds", "21", "1sdfkjhbhjf", 231, 123, 21, "2132");
-            updatedBoat.SailNumber = "16-3335";
+            updatedBoat.Boat_Sailnumber = "16-3335";
 
             boatRepository.UpdateBoat(updatedBoat);
             Boat existingBoat = boatRepository.SearchBoat("16-3335");
 
             Assert.IsNotNull(existingBoat);
-            Assert.AreEqual(existingBoat.TheBoatType, updatedBoat.TheBoatType);
-            Assert.AreEqual(existingBoat.Model, updatedBoat.Model);
-            Assert.AreEqual(existingBoat.EngineInfo, updatedBoat.EngineInfo);
-            Assert.AreEqual(existingBoat.Draft, updatedBoat.Draft);
-            Assert.AreEqual(existingBoat.Width, updatedBoat.Width);
-            Assert.AreEqual(existingBoat.Length, updatedBoat.Length);
-            Assert.AreEqual(existingBoat.YearOfConstruction, updatedBoat.YearOfConstruction);
+            Assert.AreEqual(existingBoat.Boat_TheBoatType, updatedBoat.Boat_TheBoatType);
+            Assert.AreEqual(existingBoat.Boat_Model, updatedBoat.Boat_Model);
+            Assert.AreEqual(existingBoat.Boat_EngineInfo, updatedBoat.Boat_EngineInfo);
+            Assert.AreEqual(existingBoat.Boat_Draft, updatedBoat.Boat_Draft);
+            Assert.AreEqual(existingBoat.Boat_Width, updatedBoat.Boat_Width);
+            Assert.AreEqual(existingBoat.Boat_Length, updatedBoat.Boat_Length);
+            Assert.AreEqual(existingBoat.Boat_yearofconstruction, updatedBoat.Boat_yearofconstruction);
         }
         [TestMethod]
         public void TestBoat_SearchBoat_NotNull()
@@ -77,7 +77,7 @@ namespace SailClubLibraryUnitTests
             Boat boat = boatRepository.SearchBoat("16-3335");
 
             Assert.IsNotNull(boat);
-            Assert.AreEqual("16-3335", boat.SailNumber);
+            Assert.AreEqual("16-3335", boat.Boat_Sailnumber);
         }
     }
 }

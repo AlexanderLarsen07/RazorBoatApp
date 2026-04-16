@@ -12,6 +12,7 @@ namespace SailClubLibrary.Models
 
         private bool _isActive;
         #endregion
+
         #region Properties
         public int Id { get; set; }
         public DateTime StartDate { get; set; }
@@ -28,6 +29,7 @@ namespace SailClubLibrary.Models
         public Member TheMember { get; set; }
         public Boat TheBoat { get; set; }
         #endregion
+
         #region Constructor
         public Booking(int id, DateTime startDate, DateTime endDate, string destination, Member member, Boat boat)
         {
@@ -43,6 +45,7 @@ namespace SailClubLibrary.Models
             
         }
         #endregion
+
         #region Methods
         public override string ToString()
         {
@@ -50,7 +53,7 @@ namespace SailClubLibrary.Models
                 $"\nStart Dato: {StartDate} " +
                 $"\nSlut Dato: {EndDate} " +
                 $"\nDestination: {Destination} " +
-                $"\nBåden med sejlnummeret: {TheBoat.SailNumber}" +
+                $"\nBåden med sejlnummeret: {TheBoat.Boat_Sailnumber}" +
                 $"\nBooket af: {TheMember.FirstName}" +
                 $"\nBåden er kommet i havn: {SailCompleted}";
         }

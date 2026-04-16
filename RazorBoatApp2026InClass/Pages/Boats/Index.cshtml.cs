@@ -1,7 +1,10 @@
 using System.Linq.Expressions;
 using System.Reflection.Metadata.Ecma335;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using SailClubLibrary.Helpers.ClassReaders;
+using SailClubLibrary.Helpers.Filter;
 using SailClubLibrary.Helpers.Sorting;
 using SailClubLibrary.Interfaces;
 using SailClubLibrary.Models;
@@ -10,57 +13,86 @@ namespace RazorBoatApp2026InClass.Pages.Boats
 {
     public class IndexModel : PageModel
     {
-        private IBoatRepository bRepo;
+        #region Instance fields
+        private IGenericRepositoryAsync<Boat> bRepo;
 
-        public List<Boat> Boats { get; set; }
+        private string sqlSelect = "select * from Boat";
+        private string sqlDelete = "delete from Boat where Boat_Sailnumber = @Boat_Sailnumber";
+        #endregion
 
-        //[BindProperty]
-        //public Boat Boat { get; set; }
+        #region Properties
+        public IEnumerable<Boat> Boats { get; set; }
+
+        [BindProperty]
+        public Boat Boat { get; set; }
         [BindProperty(SupportsGet = true)]
         public string FilterCriteria { get; set; }
         [BindProperty(SupportsGet = true)]
-        public string SortBy { get; set; }
+        public string FilterBy { get; set; }
 
-        public IndexModel(IBoatRepository boatRepository)
+        [BindProperty(SupportsGet =true)]
+        public BoatType? SelectedBoatType { get; set; }
+        #endregion
+
+        #region Constructor
+        public IndexModel(IGenericRepositoryAsync<Boat> boatRepository)
         {
             bRepo = boatRepository;
         }
-        public void OnGet()
+        #endregion
+
+        #region Methods
+        public async Task OnGet()
         {
-            if (!String.IsNullOrEmpty(FilterCriteria))
+            try
             {
-                Boats = bRepo.FilterBoats(FilterCriteria);
+                Boats = BoatFilter(await bRepo.GetAllObjectsAsync(sqlSelect, BoatReader.Reader));
             }
-            else
+            catch (Exception ex)
             {
-                Boats = bRepo.GetAllBoats();
+                ViewData["ErrorMessage"] = ex.Message;
             }
-            Boats = BoatSort(Boats);
-           
         }
-       
-        private List<Boat> BoatSort(List<Boat> boats)
+
+        private IEnumerable<Boat> BoatFilter(IEnumerable<Boat> boats)
         {
-            switch (SortBy)
+            List<Predicate<Boat>> predicates = new List<Predicate<Boat>>();
+            if (SelectedBoatType.HasValue)
             {
-                case "Id":
-                    boats.Sort();
-                    break;
-                case "SailNumber":
-                    boats.Sort(new BoatCompareBySailNumber());
-                    break;
-                case "YearOfConstruction":
-                    boats.Sort(new BoatCompareByYear());
-                    break;
-                default:
-                    break;
+                predicates.Add(b => b.Boat_TheBoatType == SelectedBoatType.Value);
             }
-            return boats;
+            if (!string.IsNullOrWhiteSpace(FilterCriteria))
+            {
+                switch (FilterBy)
+                {
+                    case "All":
+                        predicates.Add(b => b.FilterAll().Contains(FilterCriteria, StringComparison.OrdinalIgnoreCase));
+                        break;
+                    case "BoatType":
+                        predicates.Add(b => !string.IsNullOrEmpty(b.Boat_TheBoatType.ToString()) && b.Boat_TheBoatType.ToString().Contains(FilterCriteria, StringComparison.OrdinalIgnoreCase));
+                        break;
+                    case "Model":
+                        predicates.Add(b => !string.IsNullOrEmpty(b.Boat_Model) && b.Boat_Model.Contains(FilterCriteria, StringComparison.OrdinalIgnoreCase));
+                        break;
+                    case "Sailnumber":
+                        predicates.Add(b => !string.IsNullOrEmpty(b.Boat_Sailnumber) && b.Boat_Sailnumber.Contains(FilterCriteria, StringComparison.OrdinalIgnoreCase));
+                        break;
+                    case "EngineInfo":
+                        predicates.Add(b => !string.IsNullOrEmpty(b.Boat_EngineInfo) && b.Boat_EngineInfo.Contains(FilterCriteria, StringComparison.OrdinalIgnoreCase));
+                        break;
+                    case "YearOfConstruction":
+                        predicates.Add(b => !string.IsNullOrEmpty(b.Boat_yearofconstruction) && b.Boat_yearofconstruction.Contains(FilterCriteria, StringComparison.OrdinalIgnoreCase));
+                        break;
+                }
+            }
+            return FilterFunctions<Boat>.Filter(boats, predicates);
         }
+
         public IActionResult OnPostDelete(string sailNumber)
         {
-            bRepo.RemoveBoat(sailNumber);
+            bRepo.RemoveObjectAsync(sqlDelete, "Boat_Sailnumber", sailNumber);
             return RedirectToPage("index");
         }
+        #endregion
     }
 }

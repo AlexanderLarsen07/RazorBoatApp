@@ -9,9 +9,11 @@ namespace SailClubLibrary.Helpers.Sorting
 {
     public class BoatCompareBySailNumber : IComparer<Boat>
     {
+        #region Methods
         public int Compare(Boat? x, Boat? y)
         {
-            return x.SailNumber.CompareTo(y.SailNumber);
+            return x.Boat_Sailnumber.CompareTo(y.Boat_Sailnumber);
         }
+        #endregion
     }
 }

@@ -164,7 +164,7 @@ namespace SailClubLibrary.Services
                 {
                     continue; //Skip null boats
                 }
-                bool matchingSailNum = existingBoat.SailNumber == boat.SailNumber;
+                bool matchingSailNum = existingBoat.Boat_Sailnumber == boat.Boat_Sailnumber;
                 if (matchingSailNum)
                 {
                     bool startsBeforeExistingEnds = startDate < existingBooking.EndDate;

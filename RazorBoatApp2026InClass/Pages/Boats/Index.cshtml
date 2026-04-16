@@ -13,6 +13,29 @@
 
 <form method="get">
 	search:<input type="text" asp-for="@Model.FilterCriteria" />
+	<select asp-for="@Model.FilterBy" class="form-select d-inline-block" style="width:auto; margin-left:8px;">
+		<option value="All">All</option>
+		<option value="BoatType">BoatType</option>
+		<option value="Model">Model</option>
+		<option value="Sailnumber">Sailnumber</option>
+		<option value="EngineInfo">EngineInfo</option>
+		<option value="YearOfConstruction">YearOfConstruction</option>
+	</select>
+
+	<br />
+	<input type="radio"
+		   asp-for="SelectedBoatType"
+		   value="" />
+	<label>All</label>
+	<br />
+	@foreach (var type in Enum.GetValues<BoatType>())
+	{
+		<input type="radio"
+			   asp-for="SelectedBoatType"
+			   value="@type" />
+		<label>@type</label>
+		<br />
+	}
 	<input type="submit" value="Filter" />
 </form>
 
@@ -43,18 +66,18 @@
 		@foreach(Boat item in Model.Boats)
 		{
 			<tr>
-				<td>@item.Id</td>
-				<td>@item.TheBoatType</td>
-				<td>@item.Model</td>
-				<td>@item.SailNumber</td>
-				<td>@item.YearOfConstruction</td>
+				<td>@item.Boat_ID</td>
+				<td>@item.Boat_TheBoatType</td>
+				<td>@item.Boat_Model</td>
+				<td>@item.Boat_Sailnumber</td>
+				<td>@item.Boat_yearofconstruction</td>
 				
 				<td class="form-group">
-					<a asp-page="UpdateBoat" asp-route-sailNumber="@item.SailNumber" value="Update boat" class="btn btn-primary">Update</a>
+					<a asp-page="UpdateBoat" asp-route-sailNumber="@item.Boat_Sailnumber" value="Update boat" class="btn btn-primary">Update</a>
 				</td>
 				<form method="Post">
 					<td class="form-group">
-						<input type="submit" asp-page-handler="Delete" asp-route-sailnumber="@item.SailNumber" value="Delete boat" class="btn btn-danger" />
+						<input type="submit" asp-page-handler="Delete" asp-route-sailnumber="@item.Boat_Sailnumber" value="Delete boat" class="btn btn-danger" />
 					</td>
 				</form>
 				

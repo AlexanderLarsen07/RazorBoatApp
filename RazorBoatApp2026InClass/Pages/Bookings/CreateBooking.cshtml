@@ -6,10 +6,10 @@
 
 <h1>Create booking</h1>
 
-<p>Boat ID: @Model.Boat.Id</p>
-<p>Boat Sailnumber: @Model.Boat.SailNumber</p>
-<p>Boat Model: @Model.Boat.Model</p>
-<p>Boat Year of Construction: @Model.Boat.YearOfConstruction</p>
+<p>Boat ID: @Model.Boat.Boat_ID</p>
+<p>Boat Sailnumber: @Model.Boat.Boat_Sailnumber</p>
+<p>Boat Model: @Model.Boat.Boat_Model</p>
+<p>Boat Year of Construction: @Model.Boat.Boat_yearofconstruction</p>
 
 <form method="post">
 	<div class="form-group">
@@ -24,14 +24,14 @@
 		<label asp-for="@Model.Destination" class="control-label"></label>
 		<input asp-for="@Model.Destination" class="form-control" />
 	</div>
-	<div class="form-group">
+	@* <div class="form-group">
 		<label asp-for="@Model.Id" class="control-label"></label>
 		<input asp-for="@Model.Id" class="form-control" />
-	</div>
-	<div class="form-group">
+	</div> *@
+	@* <div class="form-group">
 		<label asp-for="@Model.PhoneNumber" class="control-label"></label>
 		<input asp-for="@Model.PhoneNumber" class="form-control" />
-	</div>
+	</div> *@
 	@* <div class="form-group">
 		<label asp-for="@Model.Booking.TheBoat" class="control-label"></label>
 		<input asp-for="@Model.Booking.TheBoat" class="form-control" />

@@ -29,7 +29,7 @@
 		{
 			<tr>
 				<td>@item.IsActive</td>
-				<td>@item.SailCompleted</td>
+				<td>@(item.SailCompleted ? "afsluttet" : "ikke afsluttet")</td>
 				<td>@item.StartDate</td>
 				<td>@item.EndDate</td>
 				<td>@item.Destination</td>

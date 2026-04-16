@@ -1,29 +1,25 @@
-﻿using SailClubLibrary.Data;
-using SailClubLibrary.Exceptions;
+﻿using System.Data;
+using System.Text;
+using Microsoft.Data.SqlClient;
+using SailClubLibrary.Data;
 using SailClubLibrary.Interfaces;
 using SailClubLibrary.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SailClubLibrary.Services
 {
     /// <summary>
     /// Class for Constructing and calling Member Repository Objects using the interface
     /// </summary>
-    public class MemberRepository : IMemberRepository
+    public class MemberRepository : Connection, IMemberRepoAsync
     {
         #region Instance Fields
         private Dictionary<string, Member> _members;
-        #endregion
-
-        #region Properties
-        /// <summary>
-        /// Count used for counting members in _members repository
-        /// </summary>
-        public int Count { get { return _members.Count; } }
+        private string _queryString = "select * from SailMember";
+        private string _insertSql = "insert into SailMember values(@FirstName, @SurName, @PhoneNo, @Address, @City, @Mail, @Type, @Role, @Image)";
+        private string _queryCount = "select count(*) from SailMember";
+        private string _deleteSql = "delete from sailmember where Member_ID = @ID";
+        private string _updateSql = "update SailMember set Member_FirstName = @FirstName, Member_SurName = @SurName, Member_Phonenumber = @PhoneNo, Member_Address = @Address, Member_City = @City, Member_Mail = @Mail, Member_Membertype= @Type, Member_MemberRole = @Role, Member_Image = @Image where Member_ID = @ID";
+        private string _searchSql = "select * from SailMember where Member_ID = @ID";
         #endregion
 
         #region Constructor
@@ -38,6 +34,20 @@ namespace SailClubLibrary.Services
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Count used for counting members in _members repository
+        /// </summary>
+        public async Task<int> Count()
+        {
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            using (SqlCommand cmd = new SqlCommand(_queryCount, conn))
+            {
+                await conn.OpenAsync();
+                object? result = await cmd.ExecuteScalarAsync();
+                return Convert.ToInt32(result);
+            }
+        }
+
         // Formål:
         // Tilføje Medlem
         // if-statement:
@@ -48,14 +58,24 @@ namespace SailClubLibrary.Services
         /// <summary>
         /// Method for adding members to our repository, which runs a check to tell if the phone number is available
         /// </summary>
-        public void AddMember(Member member)
+        public async Task AddMember(Member member)
         {
-            if (!_members.ContainsKey(member.PhoneNumber))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
-                _members.Add(member.PhoneNumber, member);
-                return;
+                SqlCommand command = new SqlCommand(_insertSql, connection);
+                await command.Connection.OpenAsync();
+                //command.Parameters.AddWithValue("@ID", member.Id);
+                command.Parameters.AddWithValue("@FirstName", member.FirstName);
+                command.Parameters.AddWithValue("@SurName", member.SurName);
+                command.Parameters.AddWithValue("@PhoneNo", member.PhoneNumber);
+                command.Parameters.AddWithValue("@Address", member.Address);
+                command.Parameters.AddWithValue("@City", member.City);
+                command.Parameters.AddWithValue("@Mail", member.Mail);
+                command.Parameters.AddWithValue("@Type", member.TheMemberType);
+                command.Parameters.AddWithValue("@Role", member.TheMemberRole);
+                command.Parameters.AddWithValue("@Image", member.MemberImage);
+                await command.ExecuteNonQueryAsync();
             }
-            throw new MemberPhoneNumberExistsException($"Medlemstelefonnummeret {member.PhoneNumber} findes allerede.");
         }
         // Formål:
         // At få fat på en list med alle medlemmer/objekter
@@ -64,10 +84,34 @@ namespace SailClubLibrary.Services
         /// <summary>
         /// Method for returning a list of members
         /// </summary>
-        public List<Member> GetAllMembers()
+        public async Task<List<Member>> GetAllMembers()
         {
-            return _members.Values.ToList();
+            List<Member> members = new List<Member>();
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
+            {
+                SqlCommand command = new SqlCommand(_queryString, connection);
+                await command.Connection.OpenAsync();
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+                while (reader.Read())
+                {
+                    int memberId = reader.GetInt32("Member_Id");
+                    string firstName = reader.GetString("Member_FirstName");
+                    string surName = reader.GetString("Member_SurName");
+                    string phoneNumber = reader.GetString("Member_PhoneNumber");
+                    string memberAddress = reader.GetString("Member_Address");
+                    string city = reader.GetString("Member_City");
+                    string mail = reader.GetString("Member_Mail");
+                    MemberType memberType = Enum.GetValues<MemberType>()[reader.GetInt32("Member_MemberType")];
+                    MemberRole memberRole = Enum.GetValues<MemberRole>()[reader.GetInt32("Member_MemberRole")];
+                    Member member = new Member(memberId, firstName, surName, phoneNumber, memberAddress, city, mail, memberType, memberRole);
+                    member.MemberImage = reader.GetString("Member_Image");
+                    members.Add(member);
+                }
+                reader.Close();
+            }
+            return members;
         }
+
         // Formål:
         // Fjerne Medlem
         // Metoden sletter via metoden Remove, og sletter telefonnummeret fra _members
@@ -75,9 +119,15 @@ namespace SailClubLibrary.Services
         /// <summary>
         /// Method for removing a member from the dictionary, using their phone number
         /// </summary>
-        public void RemoveMember(Member member)
+        public async Task RemoveMember(Member member)
         {
-            _members.Remove(member.PhoneNumber);
+            using (SqlConnection conn = new SqlConnection(ConnectionString))
+            {
+                SqlCommand sqlCommand = new SqlCommand(_deleteSql, conn);
+                await sqlCommand.Connection.OpenAsync();
+                sqlCommand.Parameters.AddWithValue("@ID", member.Id);
+                await sqlCommand.ExecuteNonQueryAsync();
+            }
         }
         // Formål:
         // Opdatere Medlem
@@ -87,58 +137,58 @@ namespace SailClubLibrary.Services
         /// <summary>
         /// Method to update a member's info, using their phone number to distinguish them
         /// </summary>
-        public void UpdateMember(Member updatedMember)
+        public async Task UpdateMember(Member updatedMember)
         {
-            if (_members.ContainsKey(updatedMember.PhoneNumber))
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
-                Member existingMember = _members[updatedMember.PhoneNumber];
-
-                existingMember.FirstName = updatedMember.FirstName;
-                existingMember.SurName = updatedMember.SurName;
-                existingMember.Address = updatedMember.Address;
-                existingMember.City = updatedMember.City;
-                existingMember.Mail = updatedMember.Mail;
-                existingMember.TheMemberType = updatedMember.TheMemberType;
-                existingMember.TheMemberRole = updatedMember.TheMemberRole;
+                SqlCommand command = new SqlCommand(_updateSql, connection);
+                await command.Connection.OpenAsync();
+                command.Parameters.AddWithValue("@ID", updatedMember.Id);
+                command.Parameters.AddWithValue("@FirstName", updatedMember.FirstName);
+                command.Parameters.AddWithValue("@SurName", updatedMember.SurName);
+                command.Parameters.AddWithValue("@PhoneNo", updatedMember.PhoneNumber);
+                command.Parameters.AddWithValue("@Address", updatedMember.Address);
+                command.Parameters.AddWithValue("@City", updatedMember.City);
+                command.Parameters.AddWithValue("@Mail", updatedMember.Mail);
+                command.Parameters.AddWithValue("@Type", updatedMember.TheMemberType);
+                command.Parameters.AddWithValue("@Role", updatedMember.TheMemberRole);
+                command.Parameters.AddWithValue("@Image", updatedMember.MemberImage);
+                await command.ExecuteNonQueryAsync();
             }
         }
 
         /// <summary>
         /// Searches through the member dictionary and returns the member with the given phonenumber. 
         /// </summary>
-        public Member? SearchMember(string phoneNumber)
-        {
-            if (_members.ContainsKey(phoneNumber))
-            {
-                return _members[phoneNumber];
-            }
-            return null;
-        }
 
-        /// <summary>
-        /// Method for printing the info of every member in the dictionary
-        /// </summary>
-        public void PrintAll()
-        {
-            foreach (Member member in _members.Values)
-            {
-                Console.WriteLine(member);
-                Console.WriteLine();
-            }
-        }
 
-        public List<Member> FilterMembers(string filterCriteria)
+        public async Task<Member?> SearchMember(int id)
         {
-            List<Member> filteredMembers = new List<Member>();
-            foreach (Member member in _members.Values)
+            using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
-                if (member.City.Contains(filterCriteria, StringComparison.CurrentCultureIgnoreCase))
+                SqlCommand command = new SqlCommand(_searchSql, connection);
+                await command.Connection.OpenAsync();
+                command.Parameters.AddWithValue("@ID", id);
+                SqlDataReader reader = await command.ExecuteReaderAsync();
+                if(await reader.ReadAsync())
                 {
-                    filteredMembers.Add(member);
+                    int memberId = reader.GetInt32("Member_ID");
+                    string firstName = reader.GetString("Member_FirstName");
+                    string surName = reader.GetString("Member_SurName");
+                    string phoneNumber = reader.GetString("Member_PhoneNumber");
+                    string memberAddress = reader.GetString("Member_Address");
+                    string city = reader.GetString("Member_City");
+                    string mail = reader.GetString("Member_Mail");
+                    MemberType memberType = Enum.GetValues<MemberType>()[reader.GetInt32("Member_MemberType")];
+                    MemberRole memberRole = Enum.GetValues<MemberRole>()[reader.GetInt32("Member_MemberRole")];
+                    Member member = new Member(memberId, firstName, surName, phoneNumber, memberAddress, city, mail, memberType, memberRole);
+                    member.MemberImage = reader.GetString("Member_Image");
+                    reader.Close();
+                    return member;
                 }
+                return null;
             }
-            return filteredMembers;
         }
-        #endregion
     }
+    #endregion
 }

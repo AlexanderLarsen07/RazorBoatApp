@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace SailClubLibrary.Models
 {
+    #region Enum
     /// <summary>
     /// Enum to delegate the type of Member
     /// </summary>
@@ -13,4 +14,5 @@ namespace SailClubLibrary.Models
     {
         Junior, Adult, Senior
     }
+    #endregion
 }

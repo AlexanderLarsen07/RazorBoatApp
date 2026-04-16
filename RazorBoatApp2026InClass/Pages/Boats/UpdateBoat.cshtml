@@ -9,43 +9,43 @@
 
 
 <form method="post">
-	<input type="hidden" asp-for="@Model.NewBoat.SailNumber" />
+	<input type="hidden" asp-for="@Model.NewBoat.Boat_Sailnumber" />
 	@* <div class="form-group">
 		<label asp-for="@Model.NewBoat.Id" class="control-label"></label>
 		<input asp-for="@Model.NewBoat.Id" class="form-control" />
 	</div> *@
 	<div class="form-group">
-		<label asp-for="@Model.NewBoat.Model" class="control-label"></label>
-		<input asp-for="@Model.NewBoat.Model" class="form-control" />
+		<label asp-for="@Model.NewBoat.Boat_Model" class="control-label"></label>
+		<input asp-for="@Model.NewBoat.Boat_Model" class="form-control" />
 	</div>
 	@* <div class="form-group">
 		<label asp-for="@Model.NewBoat.SailNumber" class="control-label"></label>
 		<input asp-for="@Model.NewBoat.SailNumber" class="form-control" />
 	</div> *@
 	<div class="form-group">
-		<label asp-for="@Model.NewBoat.TheBoatType" class="control-label"></label>
-		<select asp-for="@Model.NewBoat.TheBoatType" asp-items="Html.GetEnumSelectList<BoatType>()" class="form-control"></select>
+		<label asp-for="@Model.NewBoat.Boat_TheBoatType" class="control-label"></label>
+		<select asp-for="@Model.NewBoat.Boat_TheBoatType" asp-items="Html.GetEnumSelectList<BoatType>()" class="form-control"></select>
 	</div>
 	<div class="form-group">
-		<label asp-for="@Model.NewBoat.Draft" class="control-label"></label>
-		<input asp-for="@Model.NewBoat.Draft" class="form-control" />
+		<label asp-for="@Model.NewBoat.Boat_Draft" class="control-label"></label>
+		<input asp-for="@Model.NewBoat.Boat_Draft" class="form-control" />
 	</div>
 	<div class="form-group">
-		<label asp-for="@Model.NewBoat.Width" class="control-label"></label>
-		<input asp-for="@Model.NewBoat.Width" class="form-control" />
+		<label asp-for="@Model.NewBoat.Boat_Width" class="control-label"></label>
+		<input asp-for="@Model.NewBoat.Boat_Width" class="form-control" />
 	</div>
 	<div class="form-group">
-		<label asp-for="@Model.NewBoat.Length" class="control-label"></label>
-		<input asp-for="@Model.NewBoat.Length" class="form-control" />
+		<label asp-for="@Model.NewBoat.Boat_Length" class="control-label"></label>
+		<input asp-for="@Model.NewBoat.Boat_Length" class="form-control" />
 	</div>
 	<div class="form-group">
-		<label asp-for="@Model.NewBoat.YearOfConstruction" class="control-label"></label>
-		<input asp-for="@Model.NewBoat.YearOfConstruction" class="form-control" />
+		<label asp-for="@Model.NewBoat.Boat_yearofconstruction" class="control-label"></label>
+		<input asp-for="@Model.NewBoat.Boat_yearofconstruction" class="form-control" />
 	</div>
 	<div>
 		<div class="form-group">
-			<label asp-for="@Model.NewBoat.EngineInfo" class="control-label"></label>
-			<input asp-for="@Model.NewBoat.EngineInfo" class="form-control" />
+			<label asp-for="@Model.NewBoat.Boat_EngineInfo" class="control-label"></label>
+			<input asp-for="@Model.NewBoat.Boat_EngineInfo" class="form-control" />
 		</div>
 	</div>
 

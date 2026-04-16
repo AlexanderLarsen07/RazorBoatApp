@@ -9,7 +9,7 @@
 
 
 <form method="post">
-	<input type="hidden" asp-for="@Model.Member.PhoneNumber" />
+	<input type="hidden" asp-for="@Model.Member.Id" />
 	@* <div class="form-group">
 		<label asp-for="@Model.Member.Id" class="control-label"></label>
 		<input asp-for="@Model.Member.Id" class="form-control" />
@@ -22,10 +22,10 @@
 		<label asp-for="@Model.Member.SurName" class="control-label"></label>
 		<input asp-for="@Model.Member.SurName" class="form-control" />
 	</div>
-@* 	<div class="form-group">
+	<div class="form-group">
 		<label asp-for="@Model.Member.PhoneNumber" class="control-label"></label>
 		<input asp-for="@Model.Member.PhoneNumber"  class="form-control" />
-	</div> *@
+	</div>
 	<div class="form-group">
 		<label asp-for="@Model.Member.Address" class="control-label"></label>
 		<input asp-for="@Model.Member.Address" class="form-control" />

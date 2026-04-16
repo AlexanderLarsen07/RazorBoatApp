@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SailClubLibrary.Helpers.Filter;
@@ -8,9 +9,12 @@ namespace RazorBoatApp2026InClass.Pages.Members
 {
     public class IndexModel : PageModel
     {
-        private IMemberRepository mRepo;
+        #region Instance fields
+        private IMemberRepoAsync mRepo;
+        #endregion
 
-        public List<Member> Members { get; set; }
+        #region Properties
+        public IEnumerable<Member> Members { get; set; }
         [BindProperty]
         public Member Member { get; set; }
         [BindProperty(SupportsGet = true)]
@@ -19,22 +23,40 @@ namespace RazorBoatApp2026InClass.Pages.Members
         public MemberType? SelectedMemberType { get; set; }
         [BindProperty(SupportsGet = true)]
         public string FilterBy { get; set; }
+        #endregion
 
-
-        public IndexModel(IMemberRepository memberRepository)
+        #region Constructor
+        public IndexModel(IMemberRepoAsync memberRepository)
         {
             mRepo = memberRepository;
         }
-        public void OnGet()
+        #endregion
+
+        #region Methods
+        public async Task OnGet()
         {
-            Members = MemberFilter(mRepo.GetAllMembers());
+            try
+            {
+                Members = MemberFilter(await mRepo.GetAllMembers());
+            }
+            catch(Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+            }
         }
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostDelete()
         {
-            mRepo.RemoveMember(Member);
+            try
+            {
+                await mRepo.RemoveMember(Member);
+            }
+            catch (Exception ex)
+            {
+                ViewData["ErrorMessage"] = ex.Message;
+            }
             return RedirectToPage("index");
         }
-        private List<Member> MemberFilter(List<Member> members)
+        private IEnumerable<Member> MemberFilter(IEnumerable<Member> members)
         {
             List<Predicate<Member>> predicates = new List<Predicate<Member>>();
             if (SelectedMemberType.HasValue)
@@ -69,5 +91,6 @@ namespace RazorBoatApp2026InClass.Pages.Members
             }
             return FilterFunctions<Member>.Filter(members, predicates);
         }
+        #endregion
     }
 }

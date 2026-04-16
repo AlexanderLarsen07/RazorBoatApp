@@ -58,6 +58,9 @@
 		@foreach (Member item in Model.Members)
 		{
 			<tr>
+				 <td>
+					 <img src="~/Images/MemberImages/@item.MemberImage" alt="Member Image" width="60" height="60" class="rounded-circle" />"
+				</td> 
 				<td>@item.Id</td>
 				<td>@item.TheMemberType</td>
 				<td>@item.FirstName</td>
@@ -67,11 +70,11 @@
 				<td>@item.City</td>
 				<td>@item.Address</td>
 				<td class="form-group">
-					<a asp-page="UpdateMember" asp-route-PhoneNumber="@item.PhoneNumber" value="Update Member" class="btn btn-primary">Update</a>
+					<a asp-page="UpdateMember" asp-route-ID="@item.Id" value="Update Member" class="btn btn-primary">Update</a>
 				</td>
 				<form method="Post">
 				<td class="form-group">
-					<input type="submit" asp-page-handler="Delete" asp-route-PhoneNumber="@item.PhoneNumber" value="Delete member" class="btn btn-danger" />
+					<input type="submit" asp-page-handler="Delete" asp-route-ID="@item.Id" value="Delete member" class="btn btn-danger" />
 				</td>
 				</form>
 			</tr>

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using SailClubLibrary.Helpers.Attributes;
 
 namespace SailClubLibrary.Models
 {
@@ -18,38 +19,39 @@ namespace SailClubLibrary.Models
 
         #region Properties
         [Required(ErrorMessage ="Id is required")]
-        public int Id { get; set; }
-        public BoatType TheBoatType { get; set; }
-        public string Model { get; set; }
+        [IgnoreUpdate]
+        public int Boat_ID { get; set; }
+        public BoatType Boat_TheBoatType { get; set; }
+        public string Boat_Model { get; set; }
         [Required]
-        public string SailNumber { get; set; }
-        public string EngineInfo { get; set; }
-        public double Draft { get; set; }
-        public double Width { get; set; }
-        public double Length { get; set; }
-        public string YearOfConstruction { get; set; }
+        public string Boat_Sailnumber { get; set; }
+        public string Boat_EngineInfo { get; set; }
+        public double Boat_Draft { get; set; }
+        public double Boat_Width { get; set; }
+        public double Boat_Length { get; set; }
+        public string Boat_yearofconstruction { get; set; }
 
         #endregion
+
+        #region Constructors
         public Boat()
         {
 
         }
 
-        #region Constructor
         public Boat(int id, BoatType boatType, string model, string sailNumber, string engineInfo,
             double draft, double width, double length, string yearOfConstruction)
         {
-            Id = id;
-            TheBoatType = boatType;
-            Model = model;
-            SailNumber = sailNumber;
-            EngineInfo = engineInfo;
-            Draft = draft;
-            Width = width;
-            Length = length;
-            YearOfConstruction = yearOfConstruction;
+            Boat_ID = id;
+            Boat_TheBoatType = boatType;
+            Boat_Model = model;
+            Boat_Sailnumber = sailNumber;
+            Boat_EngineInfo = engineInfo;
+            Boat_Draft = draft;
+            Boat_Width = width;
+            Boat_Length = length;
+            Boat_yearofconstruction = yearOfConstruction;
         }
-
         #endregion
 
         #region Methods
@@ -59,20 +61,24 @@ namespace SailClubLibrary.Models
         /// <returns></returns>
         public override string ToString()
         {
-            return ($"\nBåd Nr.{Id}: " +
+            return ($"\nBåd Nr.{Boat_ID}: " +
                 $"\nBådinfo..." +
-                $"\n{YearOfConstruction} {Model} {TheBoatType} {SailNumber} " +
-                $"\nMotorinfo: {EngineInfo} " +
+                $"\n{Boat_yearofconstruction} {Boat_Model} {Boat_TheBoatType} {Boat_Sailnumber} " +
+                $"\nMotorinfo: {Boat_EngineInfo} " +
                 $"\nDimensioner... " +
-                $"\nDybgang: {Draft}, Bredde: {Width}, Længde: {Length}");
+                $"\nDybgang: {Boat_Draft}, Bredde: {Boat_Width}, Længde: {Boat_Length}");
+        }
+
+        public string FilterAll()
+        {
+            return $"{Boat_TheBoatType.ToString() ?? ""} {Boat_Model ?? ""} {Boat_Sailnumber ?? ""} {Boat_EngineInfo ?? ""} {Boat_yearofconstruction ?? ""}";
         }
 
         public int CompareTo(Boat? boat)
         {
             if (boat == null) return 1;
-            return Id.CompareTo(boat.Id);
+            return Boat_ID.CompareTo(boat.Boat_ID);
         }
         #endregion
-
     }
 }

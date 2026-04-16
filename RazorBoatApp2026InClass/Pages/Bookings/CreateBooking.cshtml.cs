@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using SailClubLibrary.Exceptions;
@@ -11,7 +12,7 @@ namespace RazorBoatApp2026InClass.Pages.Bookings
     {
         private IBookingRepository _repo;
         private IBoatRepository _boatRepo;
-        private IMemberRepository _memberRepo;
+        private IMemberRepoAsync _memberRepo;
 
         //[BindProperty]
         //public Booking Booking { get; set; }
@@ -31,7 +32,7 @@ namespace RazorBoatApp2026InClass.Pages.Bookings
         public string Destination { get; set; }
         //[BindProperty(SupportsGet = true)]
         //public Boat Boat { get; set; }
-        public CreateBookingModel(IBoatRepository boatRepo, IBookingRepository bookingRepository, IMemberRepository memberRepository)
+        public CreateBookingModel(IBoatRepository boatRepo, IBookingRepository bookingRepository, IMemberRepoAsync memberRepository)
         {
             _repo = bookingRepository;
             _boatRepo = boatRepo;
@@ -46,7 +47,7 @@ namespace RazorBoatApp2026InClass.Pages.Bookings
             //    TheBoat = _boatRepo.SearchBoat(SailNumber)
             //};
         }
-        public IActionResult OnPost(string SailNumber)
+        public async Task<IActionResult> OnPost(string SailNumber)
         {
             ModelState.Remove("Boat");
             if (!ModelState.IsValid)
@@ -59,7 +60,7 @@ namespace RazorBoatApp2026InClass.Pages.Bookings
                 DateTime End = EndDate;
                 int id = Id;
                 string destination = Destination;
-                Member member = _memberRepo.SearchMember(PhoneNumber);
+                Member member = await _memberRepo.SearchMember(Id); //ændre hele booking
                 Boat boat = _boatRepo.SearchBoat(SailNumber);
                 Booking booking = new Booking(id, Start, End, destination, member, boat);
                 _repo.AddBooking(booking);

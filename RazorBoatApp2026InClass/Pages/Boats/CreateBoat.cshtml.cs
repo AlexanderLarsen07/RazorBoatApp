@@ -8,14 +8,25 @@ namespace RazorBoatApp2026InClass.Pages.Boats
 {
     public class CreateBoatModel : PageModel
     {
-        private IBoatRepository _repo;
+        #region Instance fields
+        private IGenericRepositoryAsync<Boat> _repo;
+        
+        private string sqlAdd = "insert into Boat values(@Boat_TheBoatType, @Boat_Model, @Boat_Sailnumber, @Boat_EngineInfo, @Boat_Draft, @Boat_Width, @Boat_Length, @Boat_yearofconstruction)";
+        #endregion
 
+        #region Properties
         [BindProperty]
         public Boat NewBoat { get; set; }
-        public CreateBoatModel(IBoatRepository boatRepository)
+        #endregion
+
+        #region Constructor
+        public CreateBoatModel(IGenericRepositoryAsync<Boat> boatRepository)
         {
             _repo = boatRepository;
         }
+        #endregion
+
+        #region Methods
         public void OnGet()
         {
         }
@@ -27,7 +38,7 @@ namespace RazorBoatApp2026InClass.Pages.Boats
             }
             try
             {
-                _repo.AddBoat(NewBoat);
+                _repo.AddObjectAsync(sqlAdd, NewBoat);
             }
             catch (BoatSailnumberExistsException bex)
             {
@@ -40,5 +51,6 @@ namespace RazorBoatApp2026InClass.Pages.Boats
             }
             return RedirectToPage("index");
         }
+        #endregion
     }
 }
